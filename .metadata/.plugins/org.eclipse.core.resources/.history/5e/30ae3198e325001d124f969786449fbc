@@ -1,0 +1,41 @@
+package board;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+@Repository("boardDAO")
+public class BoardDAO {
+
+	
+	@Autowired
+	SqlSession session;
+	
+
+	
+	public List<BoardDTO> boardlist(){
+		return session.selectList("boardlist");
+	}
+	
+	
+	
+	
+	public int saveBoard(BoardDTO dto) {
+
+		
+		
+		int saveResult = session.insert("saveBoard",dto); 
+		
+		
+		return saveResult;
+		
+	}
+	
+	
+	
+	
+	
+	
+}

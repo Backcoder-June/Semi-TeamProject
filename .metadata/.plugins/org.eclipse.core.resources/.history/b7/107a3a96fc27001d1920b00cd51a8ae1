@@ -1,0 +1,85 @@
+package board;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service("boardservice")
+public class BoardServiceImp implements BoardService {
+
+	@Autowired
+	BoardDAO boardDAO; 
+	
+//전체 게시판 조회	
+	@Override
+	public List<BoardDTO> boardlist() {
+		return boardDAO.boardlist();
+	}
+
+// 게시물 저장 
+	@Override
+	public int saveBoard(BoardDTO dto) {
+		int saveResult = boardDAO.saveBoard(dto);		
+		return saveResult;
+	}
+
+// seq로 게시물 조회 	
+	@Override
+	public BoardDTO oneBoard(int seq) {
+		return boardDAO.oneBoard(seq);
+	}
+
+// 게시물 삭제 	
+	@Override
+	public int deleteBoard(int seq) {
+		return boardDAO.deleteBoard(seq);
+	}
+
+	
+// 게시물 수정 
+	@Override
+	public int editBoard(BoardDTO dto) {
+		return boardDAO.editBoard(dto);
+	}
+
+	
+	//페이징
+		@Override
+		public List<BoardDTO> limitBoard(int page) {
+			return boardDAO.limitBoard(page);
+		}
+
+	//최대 페이지수
+		@Override
+		public int limitPage() {
+			return boardDAO.limitPage();
+		}
+
+	//비밀글여부	
+		@Override
+		public boolean secretBoard(int seq) {
+			int secret = boardDAO.secretBoard(seq);
+			if (secret == 1) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+	//조회수 업데이트
+		@Override
+		public void viewCount(int seq) {
+			boardDAO.viewCount(seq);
+		}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}

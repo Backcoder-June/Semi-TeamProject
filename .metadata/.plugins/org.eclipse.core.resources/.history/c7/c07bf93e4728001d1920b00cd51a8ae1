@@ -1,0 +1,124 @@
+package board;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+@Controller
+public class ReviewBoardController {
+
+	@Autowired
+	ReviewBoardServiceImp reviewBoardServiceImp;
+
+	// 전체 게시물 조회
+//	@GetMapping("/reviewBoardList")
+//	public String boardlist2(Model model) {
+//
+//		List<ReviewBoardDTO> boardlist2 = reviewBoardServiceImp.boardlist();
+//		model.addAttribute("boardlist2", boardlist2);
+//
+//		return "reviewBoard/boardList";
+//	}
+	// 전체 게시물 조회(페이징)
+	@GetMapping("/reviewBoardList")
+	public ModelAndView boardlistPaging2(@RequestParam(value = "page", defaultValue = "1") int page) {
+		int totalPage = reviewBoardServiceImp.limitPage();
+		List<ReviewBoardDTO> boardListPaging = reviewBoardServiceImp.limitBoard(page);
+
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("totalPage", totalPage);
+		mv.addObject("boardlist2", boardListPaging);
+		mv.setViewName("reviewBoard/boardList");
+
+		return mv;
+	}
+
+	// 게시물 작성
+	@GetMapping("/writingReviewBoard")
+	public String writingBoard2() {
+		return "reviewBoard/writingForm";
+	}
+
+	// 게시물 저장
+	@PostMapping("/writingReviewBoard")
+	public String saveBoard2(ReviewBoardDTO dto) {
+		reviewBoardServiceImp.saveBoard(dto);
+		return "redirect:/reviewBoardList";
+	}
+
+	// 해당 게시물 조회
+//	@GetMapping("/reviewBoard/{boardSeq}")
+//	public String oneBoard2(@PathVariable("boardSeq") int boardSeq, Model model) {
+//		model.addAttribute("oneBoard", reviewBoardServiceImp.oneBoard(boardSeq));
+//		return "reviewBoard/oneBoard";
+//	}
+	@GetMapping("/reviewBoard/{boardSeq}")
+	public String oneBoard2(@PathVariable("boardSeq") int seq, Model model) {
+		boolean secret = reviewBoardServiceImp.secretBoard(seq);
+		model.addAttribute("oneBoard", reviewBoardServiceImp.oneBoard(seq));
+		model.addAttribute("secret", secret);
+		reviewBoardServiceImp.viewCount(seq);
+		return "reviewBoard/oneBoard";
+	}
+
+	// 게시물 삭제
+	@GetMapping("/deleteReviewBoard")
+	public String deleteBoard2(HttpServletRequest request, int deleteBoardSeq, String writer) {
+		reviewBoardServiceImp.deleteBoard(deleteBoardSeq);
+
+		return "redirect:/reviewBoardList";
+
+		/*
+		 * 세션으로 확인 후 삭제 시키기 HttpSession session = request.getSession(); String sessionid
+		 * = (String)session.getAttribute("sessionid");
+		 * 
+		 * if(writer.equals(sessionid)){ boardservice.deleteBoard(seq); }else { return
+		 * "board/deletefail"; } return "redirect:/boardList"; }
+		 */
+	}
+
+	// 게시물 수정 페이지
+	@GetMapping("/editReviewBoard/{editSeq}")
+	public String editBoardForm2(@PathVariable("editSeq") int editSeq, Model model) {
+		model.addAttribute("editTarget", reviewBoardServiceImp.oneBoard(editSeq));
+		return "reviewBoard/editBoardForm";
+	}
+
+	// 게시물 수정 update
+	@PostMapping("/editReviewBoard/{editSeq}")
+	public String editBoardProcess2(ReviewBoardDTO boardDTO) {
+		reviewBoardServiceImp.editBoard(boardDTO);
+		return "redirect:/reviewBoardList";
+
+	}
+
+	// 추천 Plus
+	@ResponseBody
+	@PostMapping(value = "/reviewBoard/like", produces = { "application/json;charset=utf-8" })
+	public String updateLike(int seq) throws Exception {
+
+		int likeCheck = reviewBoardServiceImp.checkNum(seq);
+
+		if (likeCheck == 0) {
+			reviewBoardServiceImp.likePlus(seq);
+			reviewBoardServiceImp.likeCheck(seq);
+		} else if (likeCheck == 1) {
+			reviewBoardServiceImp.likeMinus(seq);
+			reviewBoardServiceImp.likeCheckCancel(seq);
+		}
+
+		int likeCount = reviewBoardServiceImp.likeCount(seq);
+
+		return "{\"result\" : \"" + likeCount + "\"}";
+	}
+}

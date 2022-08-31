@@ -1,0 +1,17 @@
+package reviewBoard;
+
+import java.util.List;
+
+public interface ReviewBoardService {
+
+	public List<ReviewBoardDTO> boardlist();
+
+	public int saveBoard(ReviewBoardDTO dto);
+	
+	public ReviewBoardDTO oneBoard(int seq);
+	
+	public int deleteBoard(int seq);
+	
+	public int editBoard(ReviewBoardDTO dto); 
+	
+}

@@ -1,0 +1,50 @@
+package board;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+
+
+
+
+@Repository("dao")
+public class MemberDAO {
+	@Autowired
+	SqlSession session;
+	
+	//회원가입
+	public void insertMember(MemberDTO dto){
+		session.insert("insertmember",dto);
+	}
+	//회원탈퇴
+	public void deleteMember(String id) {
+		session.delete("deleteMember",id);
+	}
+	
+	//회원정보 조회
+	public MemberDTO selectOneMember(String id) {
+		return session.selectOne("onemember", id);
+	}
+	
+	//회원정보 수정
+	public void updateMember(MemberDTO dto) {
+		session.update("updatemember", dto);
+	}
+	
+	//아이디 체크
+	public int idChk(MemberDTO dto) {
+		int result = session.selectOne("idChk", dto);
+		return result;
+	}
+	
+	//로그인체크
+	public String loginCheck(MemberDTO dto) {
+	return session.selectOne("logincheck", dto);
+	 }
+
+
+
+}

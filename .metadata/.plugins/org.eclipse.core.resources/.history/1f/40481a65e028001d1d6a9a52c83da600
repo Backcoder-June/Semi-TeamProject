@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="rb">
+
+<!-- 전체 게시물 조회 -->
+<select id="boardlist2" resultType="reviewboarddto">
+select * from reviewboard  
+</select>
+
+<!-- 전체 게시물 갯수 조회 -->
+<select id="countBoard2" resultType="int">
+	select count(*) from reviewboard
+</select>
+
+<!-- 게시물 저장 -->
+<insert id="saveBoard2" parameterType="reviewboarddto">
+insert into reviewboard (title, contents, writer, secret) 
+values(#{title}, #{contents}, #{writer}, #{secret})  
+</insert>
+
+<!-- seq 로 게시물 조회 -->
+<select id="oneBoard2" resultType="reviewboarddto">
+select * from reviewboard where seq = #{seq} 
+</select>
+
+<!-- 게시물 삭제 -->
+<delete id="deleteBoard2">
+delete from reviewboard where seq = #{seq} 
+</delete>
+
+<!-- 게시물 수정 -->
+<update id="editBoard2">
+update reviewboard set seq=#{seq}, title=#{title}, contents=#{contents}, secret=#{secret}, writingTime=#{writingTime}, viewCount=#{viewCount}, writer=#{writer} 
+where seq = #{seq} 
+</update>
+
+<!-- 페이징 -->
+<select id="limitBoard2" resultType="reviewboarddto"
+	parameterType="int">
+	select * from reviewboard order by seq desc limit #{limit}, 10
+</select>
+
+<!-- 비밀글 여부 -->
+<select id="secretBoard2" resultType="int" parameterType="int">
+	select secret from reviewboard where seq=#{seq}
+</select>
+
+<!-- 조회수 -->
+<update id="viewCount2" parameterType="int">
+	update reviewboard set viewcount=viewcount +1 where seq=#{seq}
+</update>
+
+<!--  추천 -->
+
+<update id="likePlus2" parameterType="int">
+update board set likeCount=likeCount+1 where seq=#{seq}
+</update>
+
+<update id="likeMinus2" parameterType="int">
+update board set likeCount=likeCount-1 where seq=#{seq}
+</update>
+
+<select id="checkNum2" resultType="int">
+select likeCheck from board where seq=#{seq}
+</select>
+
+<update id="likeCheck2">
+update board set likecheck = 1 where seq=#{seq} 
+</update>
+
+<update id="likeCheckCancel2">
+update board set likecheck = 0 where seq=#{seq} 
+</update>
+
+<select id="likeCount2" resultType="int">
+select likeCount from board where seq=#{seq}
+</select>
+
+	<!-- 검색 -->
+	<select id="searchList2" resultType="reviewboarddto" parameterType="hashMap">
+	 	select * from reviewboard where ${item} like concat('%', #{search}, '%') order by seq
+	 </select>
+</mapper>

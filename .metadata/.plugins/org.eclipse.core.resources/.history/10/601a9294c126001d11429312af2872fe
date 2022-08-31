@@ -1,0 +1,13 @@
+package board;
+
+import java.util.List;
+
+public interface BoardService {
+
+	public List<BoardDTO> boardlist();
+
+	public int saveBoard(BoardDTO dto);
+	
+	public BoardDTO oneBoard(int seq);
+	
+}

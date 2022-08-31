@@ -1,0 +1,132 @@
+package board;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+@Controller
+public class MemberController {
+	@Autowired
+	@Qualifier("memberservice")
+	MemberService service;
+
+// 홈화면
+	@RequestMapping("/")
+	public String home(HttpSession session) {
+		String id = (String) session.getAttribute("id");
+		if (id != null) {
+			return "login/loginresult";
+		}
+		return "login/home";
+	}
+
+//로그인페이지
+	@RequestMapping("/login")
+	public String loginform() {
+		return "login/login";
+	}
+
+//로그인
+	@PostMapping("/loginprocess")
+	public ModelAndView login_check(@ModelAttribute MemberDTO dto, HttpSession session, HttpServletRequest request) {
+		String name = service.loginCheck(dto, session);
+		ModelAndView mv = new ModelAndView();
+		session = request.getSession();
+		if (name != null) { // 로그인 성공 시
+			session.setAttribute("id", dto.getId());
+			session.setAttribute("password", dto.getPassword());
+			mv.setViewName("login/loginresult"); // 뷰의 이름
+		} else { // 로그인 실패 시
+			mv.setViewName("login/login");
+			mv.addObject("message", "error");
+		}
+		return mv;
+	}
+
+	// 로그인 후 페이지 
+	@GetMapping("/loginresult")
+	public String loginedpage() {
+		return "login/loginresult"; 
+	}
+
+	
+	
+	// 로그아웃
+	@RequestMapping("/logout")
+	public String logout(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		session.invalidate();
+		return "login/login";
+	}
+
+//회원가입폼 이동
+	@GetMapping("/signin")
+	public String signin() {
+		return "login/singinform";
+	}
+
+//회원가입
+	@RequestMapping(value = "/signin", produces = { "application/json;charset=utf-8" }, method = RequestMethod.POST)
+	public String signprocess(MemberDTO dto) {
+
+		int result = service.idChk(dto);
+		if (result == 1) {
+			return "login/signinform";
+		} else if (result == 0) {
+			service.insertMember(dto);
+			return "login/login";
+		}
+		return "redirect:/";
+
+	}
+
+//아이디 체크
+	@ResponseBody
+	@RequestMapping(value = "/idChk", method = RequestMethod.POST)
+	public int idChk(MemberDTO dto) {
+		int result = service.idChk(dto);
+		return result;
+	}
+
+//회원탈퇴
+	@RequestMapping("/deletemember")
+	public String deleteprocess(String id, HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		id = (String) session.getAttribute("id");
+		service.deleteMember(id);
+		return "login/login";
+	}
+
+//회원정보수정 폼
+	@GetMapping("/memberupdate")
+	public ModelAndView updateBoard(String id, HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		id = (String) session.getAttribute("id");
+		// seq 글 조회 BoardDTO -모델 - 뷰 폼 미리 보여주자
+		MemberDTO dto = service.selectOneMember(id);
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("updateform", dto);
+		mv.setViewName("login/updateform");
+		return mv;
+
+	}
+
+//회원정보 수정 
+	@PostMapping("/memberupdate")
+	public String updateBoard(MemberDTO dto) {
+		service.updateMember(dto);
+		return "redirect:/";
+
+	}
+
+}

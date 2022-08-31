@@ -1,0 +1,43 @@
+package board;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service("reviewBoardServiceImp")
+public class ReviewBoardServiceImp implements ReviewBoardService {
+
+	@Autowired
+	ReviewBoardDAO reviewBoardDAO; 
+	
+//전체 게시판 조회	
+	@Override
+	public List<ReviewBoardDTO> boardlist() {
+		return reviewBoardDAO.boardlist();
+	}
+
+// 게시물 저장 
+	@Override
+	public int saveBoard(ReviewBoardDTO dto) {
+		int saveResult = reviewBoardDAO.saveBoard(dto);		
+		return saveResult;
+	}
+
+// seq로 게시물 조회 	
+	@Override
+	public ReviewBoardDTO oneBoard(int seq) {
+		return reviewBoardDAO.oneBoard(seq);
+	}
+
+// 게시물 삭제 	
+	@Override
+	public int deleteBoard(int seq) {
+		return reviewBoardDAO.deleteBoard(seq);
+	}
+
+	@Override
+	public int editBoard(ReviewBoardDTO dto) {
+		return reviewBoardDAO.editBoard(dto);
+	}
+}

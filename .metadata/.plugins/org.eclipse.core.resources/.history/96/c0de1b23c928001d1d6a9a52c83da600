@@ -1,0 +1,45 @@
+package board;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+@Controller
+public class CommentController {
+	@Autowired
+	@Qualifier("commentService")
+	CommentService commentService;
+	
+	@GetMapping("/comment")
+	public String insertComment() {
+		return "comment/commentForm";
+	}
+	
+	@ResponseBody
+	@PostMapping(value="/comment", produces = {"application/json;charset=utf-8"})
+	public CommentDTO getComment(CommentDTO dto, String writer) {
+		return commentService.insertComment(dto, writer);
+	}
+
+	@ResponseBody
+	@PostMapping(value="/updateComment", produces = {"application/json;charset=utf-8"})
+	public CommentDTO updateComment(CommentDTO dto, String updateContents, int updateSecret, int commentSeq) {
+		dto.setContents(updateContents);
+		dto.setSecret(updateSecret);
+		dto.setCommentSeq(commentSeq);
+		
+		return commentService.updateComment(dto);
+	}
+
+	@ResponseBody
+	@PostMapping(value="/deleteComment", produces = {"application/json;charset=utf-8"})
+	public void deleteComment(int commentSeq) {
+		commentService.deleteComment(commentSeq);
+	}
+}

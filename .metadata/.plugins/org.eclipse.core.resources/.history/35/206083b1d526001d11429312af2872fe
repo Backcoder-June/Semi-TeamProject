@@ -1,0 +1,47 @@
+package board;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service("boardservice")
+public class BoardServiceImp implements BoardService {
+
+	@Autowired
+	BoardDAO boardDAO; 
+	
+//전체 게시판 조회	
+	@Override
+	public List<BoardDTO> boardlist() {
+		return boardDAO.boardlist();
+	}
+
+// 게시물 저장 
+	@Override
+	public int saveBoard(BoardDTO dto) {
+		int saveResult = boardDAO.saveBoard(dto);		
+		return saveResult;
+	}
+
+// seq로 게시물 조회 	
+	@Override
+	public BoardDTO oneBoard(int seq) {
+		return boardDAO.oneBoard(seq);
+	}
+
+// 게시물 삭제 	
+	@Override
+	public int deleteBoard(int seq) {
+		return boardDAO.deleteBoard(seq);
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+}

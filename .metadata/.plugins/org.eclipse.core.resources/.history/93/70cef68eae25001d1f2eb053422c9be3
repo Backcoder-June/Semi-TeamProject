@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<script type="text/javascript">
+/* document.onload()function(){}
+ */
+ 
+ document.querySelector("#login").addEventListener("click",function(){
+	 
+	 if(document.querySelector("#id").value == null){
+		 
+		 alert("아이디를 입력해 주세요");
+	 }
+	 
+	 
+ },false);
+ 
+ 
+</script>
+
+</head>
+<body>
+
+
+<div align="center">
+<h1>로그인</h1>
+<hr>
+<form action="" >
+<table>
+<tr>
+<th>아이디</th>
+<td><input type="text" name="id" id="id"></td>
+</tr>
+<tr>
+<th>비밀번호</th>
+<td><input type="password" name="pw" id="pw"></td>
+</tr>
+<tr>
+<th> </th>
+<td>
+<input type="submit" value="로그인" id="login"> &nbsp;&nbsp; 
+<input type="reset" value="취 소" id="loginReset">
+</td>
+</tr>
+</table>
+</form>
+
+</div>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,104 @@
+package reviewBoard;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Controller
+public class ReviewBoardController {
+
+	@Autowired
+	ReviewBoardServiceImp boardservice;
+
+
+	// 전체 게시물 조회 
+	@GetMapping("/reviewBoardList")
+	public String boardlist(Model model) {
+	
+		List<ReviewBoardDTO> boardlist = boardservice.boardlist(); 
+		model.addAttribute("boardlist", boardlist);    
+		
+		return "reviewBoard/boardList"; 
+	}
+
+	// 게시물 작성 
+	@GetMapping("/writingReviewBoard")
+	public String writingBoard() {
+		return "reviewBoard/writingForm"; 
+	}
+	
+	// 게시물 저장
+	@PostMapping("/writingReviewBoard")
+	public String saveBoard(ReviewBoardDTO dto) {
+		boardservice.saveBoard(dto);
+		return "redirect:/reviewBoardList";
+	}
+
+	// 해당 게시물 조회 
+	@GetMapping("/reviewBoard/{boardSeq}")
+	public String oneBoard(@PathVariable("boardSeq")int boardSeq, Model model) {
+		model.addAttribute("oneBoard", boardservice.oneBoard(boardSeq));
+		return "reviewBoard/oneBoard";
+	}
+
+	// 게시물 삭제
+	@GetMapping("/deleteReviewBoard")
+	public String deleteBoard(HttpServletRequest request, int deleteBoardSeq, String writer) {
+		boardservice.deleteBoard(deleteBoardSeq);
+
+		return "redirect:/reviewBoardList";
+
+		/*	세션으로 확인 후 삭제 시키기 	
+		 * HttpSession session = request.getSession();
+		String sessionid = (String)session.getAttribute("sessionid");
+		
+		if(writer.equals(sessionid)){
+			boardservice.deleteBoard(seq);
+		}else {
+			return "board/deletefail"; 
+		}
+		return "redirect:/boardList";
+	}
+		
+*/		
+
+	}		
+
+	// 게시물 수정 페이지 
+	@GetMapping("/editReviewBoard/{editSeq}")
+	public String editBoardForm(@PathVariable("editSeq")int editSeq, Model model) {
+		model.addAttribute("editTarget", boardservice.oneBoard(editSeq));
+		
+		System.out.println(boardservice.oneBoard(editSeq).toString());
+		return "reviewBoard/editBoardForm";
+	}
+
+	// 게시물 수정 update 
+	@PostMapping("/editReviewBoard/{editSeq}")
+	public String editBoardProcess(ReviewBoardDTO boardDTO) {
+		System.out.println(boardDTO.toString());
+		
+		int result = boardservice.editBoard(boardDTO);
+		
+		System.out.println(result);
+		
+		return "redirect:/reviewBoardList";
+		
+	}
+		
+		
+	
+	
+	
+
+//	
+}

@@ -1,0 +1,8 @@
+package board;
+
+public interface CommentService {
+	public CommentDTO insertComment(CommentDTO dto, String writer);
+	public CommentDTO getComment(int commentSeq);
+	public CommentDTO updateComment(CommentDTO dto);
+	public void deleteComment(int commentSeq);
+}

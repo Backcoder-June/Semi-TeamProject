@@ -1,0 +1,146 @@
+package board;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+@Controller
+public class BoardController {
+
+	@Autowired
+	BoardServiceImp boardservice;
+
+
+	// 전체 게시물 조회 
+	/*
+	 * @GetMapping("/boardList") public String boardlist(Model model) {
+	 * 
+	 * List<BoardDTO> boardlist = boardservice.boardlist();
+	 * model.addAttribute("boardlist", boardlist);
+	 * 
+	 * return "board/boardList"; }
+	 */
+	
+	// 전체 게시물 조회(페이징)
+	@GetMapping("/boardList")
+	public ModelAndView boardlistPaging(@RequestParam(value = "page", defaultValue = "1") int page) {
+		int totalPage = boardservice.limitPage();
+		List<BoardDTO> boardListPaging = boardservice.limitBoard(page);
+
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("totalPage", totalPage);
+		mv.addObject("boardlist", boardListPaging);
+		mv.setViewName("board/boardList");
+
+		return mv;
+	}
+
+	
+	
+	// 게시물 작성 
+	@GetMapping("/writingBoard")
+	public String writingBoard() {
+		return "board/writingForm"; 
+	}
+	
+	// 게시물 저장
+	@PostMapping("/writingBoard")
+	public String saveBoard(BoardDTO dto) {
+		boardservice.saveBoard(dto);
+		return "redirect:/boardList";
+	}
+
+	// 해당 게시물 조회 
+	@GetMapping("/board/{boardSeq}")
+	public String oneBoard(@PathVariable("boardSeq")int seq, Model model) {
+		boolean secret = boardservice.secretBoard(seq);
+		model.addAttribute("oneBoard", boardservice.oneBoard(seq));
+		model.addAttribute("secret", secret);
+		boardservice.viewCount(seq);
+		return "board/oneBoard";
+	}
+
+	// 게시물 삭제
+	@GetMapping("/deleteBoard")
+	public String deleteBoard(HttpServletRequest request, int deleteBoardSeq, String writer) {
+		boardservice.deleteBoard(deleteBoardSeq);
+
+		return "redirect:/boardList";
+
+		/*	세션으로 확인 후 삭제 시키기 	
+		 * HttpSession session = request.getSession();
+		String sessionid = (String)session.getAttribute("sessionid");
+		
+		if(writer.equals(sessionid)){
+			boardservice.deleteBoard(seq);
+		}else {
+			return "board/deletefail"; 
+		}
+		return "redirect:/boardList";
+	}
+		
+*/		
+
+	}		
+
+	// 게시물 수정 페이지 
+	@GetMapping("/editBoard/{editSeq}")
+	public String editBoardForm(@PathVariable("editSeq")int editSeq, Model model) {
+		model.addAttribute("editTarget", boardservice.oneBoard(editSeq));
+		
+		System.out.println(boardservice.oneBoard(editSeq).toString());
+		return "board/editBoardForm";
+	}
+
+	// 게시물 수정 update 
+	@PostMapping("/editBoard/{editSeq}")
+	public String editBoardProcess(BoardDTO boardDTO) {
+		System.out.println(boardDTO.toString());
+		
+		int result = boardservice.editBoard(boardDTO);
+		
+		System.out.println(result);
+		
+		return "redirect:/boardList";
+		
+	}
+
+	
+	// 추천 Plus 
+	@ResponseBody
+	@PostMapping(value="/board/20", produces = {"application/json;charset=utf-8"}) 
+	public String updateLike(int seq)throws Exception{
+		System.out.println(seq);
+		
+			int likeCheck = boardservice.likeCheck(seq);
+
+			  if(likeCheck == 0) { 
+			  boardservice.likePlus(seq); 
+			  boardservice.likeCheck(seq);
+			  }else if(likeCheck == 1) { 
+			  boardservice.likeMinus(seq);
+			  boardservice.likeCheckCancel(seq); }
+			
+			  int likeCount = boardservice.likeCount(seq);
+			 
+			return "{\"result\" : \"" + likeCount + "\"}";
+	}
+
+		
+	
+	
+	
+
+//	
+}

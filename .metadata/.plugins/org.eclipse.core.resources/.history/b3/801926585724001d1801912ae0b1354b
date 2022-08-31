@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="b">
+
+<!-- <select id="allboard" resultType ="boarddto">
+select * from boarddto 
+</select>
+ -->
+
+<insert id="saveBoard">
+
+insert into board (title, contents, writer, secret, viewCount, writingTime) 
+values(#{title}, #{contents}, #{writer}, #{secret}, #{viewCount}, #{writingTime})  
+
+
+
+</insert>
+
+
+</mapper>

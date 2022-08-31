@@ -1,0 +1,188 @@
+package board;
+
+import java.util.HashMap;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+@Controller
+public class BoardController {
+
+	@Autowired
+	BoardServiceImp boardservice;
+
+	// 전체 게시물 조회(페이징)
+	@GetMapping("/boardList")
+	public ModelAndView boardlistPaging(@RequestParam(value = "page", defaultValue = "1") int page) {
+		int totalPage = boardservice.limitPage();
+		List<BoardDTO> boardListPaging = boardservice.limitBoard(page);
+
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("totalPage", totalPage);
+		mv.addObject("boardlist", boardListPaging);
+		mv.setViewName("board/boardList");
+
+		return mv;
+	}
+
+	// 게시물 작성
+	@GetMapping("/writingBoard")
+	public String writingBoard() {
+		return "board/writingForm";
+	}
+
+	// 게시물 저장
+	@PostMapping("/writingBoard")
+	public String saveBoard(BoardDTO dto) {
+		boardservice.saveBoard(dto);
+		return "redirect:/boardList";
+	}
+
+	// 해당 게시물 조회
+	@GetMapping("/board/{boardSeq}")
+	public String oneBoard(@PathVariable("boardSeq") int seq, Model model) {
+		boolean secret = boardservice.secretBoard(seq);
+		model.addAttribute("oneBoard", boardservice.oneBoard(seq));
+		model.addAttribute("secret", secret);
+		model.addAttribute("boardseq", seq);
+		boardservice.viewCount(seq);
+		return "board/oneBoard";
+	}
+
+	// 게시물 삭제
+	@GetMapping("/deleteBoard")
+	public String deleteBoard(HttpServletRequest request, int deleteBoardSeq, String writer) {
+		boardservice.deleteBoard(deleteBoardSeq);
+
+		return "redirect:/boardList";
+
+		/*
+		 * 세션으로 확인 후 삭제 시키기 HttpSession session = request.getSession(); String sessionid
+		 * = (String)session.getAttribute("sessionid");
+		 * 
+		 * if(writer.equals(sessionid)){ boardservice.deleteBoard(seq); }else { return
+		 * "board/deletefail"; } return "redirect:/boardList"; }
+		 * 
+		 */
+
+	}
+
+	// 게시물 수정 페이지
+	@GetMapping("/editBoard/{editSeq}")
+	public String editBoardForm(@PathVariable("editSeq") int editSeq, Model model) {
+		model.addAttribute("editTarget", boardservice.oneBoard(editSeq));
+
+		System.out.println(boardservice.oneBoard(editSeq).toString());
+		return "board/editBoardForm";
+	}
+
+	// 게시물 수정 update
+	@PostMapping("/editBoard/{editSeq}")
+	public String editBoardProcess(BoardDTO boardDTO) {
+		int result = boardservice.editBoard(boardDTO);
+		return "redirect:/boardList";
+	}
+
+
+	
+	// 추천 좋아요 
+	@ResponseBody
+	@PostMapping(value ="/board/like", produces = { "application/json;charset=utf-8" })
+	public String updateLike(int boardseq, String memberid)throws Exception{
+		
+			int likeCheck = boardservice.likeCheck(boardseq, memberid);
+			if(likeCheck == 0) {
+				boardservice.insertLike(boardseq, memberid); 
+				boardservice.updateLike(boardseq);	
+				boardservice.updateLikeCheck(boardseq, memberid);
+			}else if(likeCheck == 1) {
+				boardservice.updateLikeCheckCancel(boardseq, memberid); 
+				boardservice.updateLikeCancel(boardseq); 
+				boardservice.deleteLike(boardseq, memberid); 
+			}
+			
+			int likeNum = boardservice.likeCount(boardseq);
+			
+			return "{\"result\" : \"" + likeCheck + "\", \"result2\" : \"" + likeNum + "\" }";
+	}
+	
+	
+	// 검색
+	@RequestMapping("/searchboard")
+	public ModelAndView searchList(String item, String search) {
+
+		HashMap<String, String> map = new HashMap();
+		map.put("item", item);
+		map.put("search", search);
+
+		List<BoardDTO> searchList = boardservice.searchList(map);
+
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("boardlist", searchList);
+		mv.setViewName("board/boardList2");
+		return mv;
+	}
+	
+	
+	
+	// comment controller 
+	
+	@Autowired
+	@Qualifier("commentService")
+	CommentService commentService;
+
+	@GetMapping("/insertComment")
+	public String insertComment() {
+		return "comment/commentForm";
+	}
+
+	
+	
+	
+	
+	@ResponseBody
+	@PostMapping(value = "/insertComment", produces = { "application/json;charset=utf-8" })
+	public String insertComment(int seq, CommentDTO dto) throws Exception {
+		System.out.println(seq + " : " + dto.toString() + " : " );
+		dto.setSeq(seq);
+		commentService.insertComment(dto, seq);
+		
+		CommentDTO cdto = commentService.getComment(dto.getCommentSeq());
+		return "{\"comment1\" : \"" + seq + "\" }";
+	}
+
+	@ResponseBody
+	@PostMapping(value = "/updateComment", produces = { "application/json;charset=utf-8" })
+	public CommentDTO updateComment(CommentDTO dto, String updateContents, int updateSecret, int commentSeq) {
+		dto.setContents(updateContents);
+		dto.setSecret(updateSecret);
+		dto.setCommentSeq(commentSeq);
+
+		return commentService.updateComment(dto);
+	}
+
+	@ResponseBody
+	@PostMapping(value = "/deleteComment", produces = { "application/json;charset=utf-8" })
+	public void deleteComment(int commentSeq) {
+		commentService.deleteComment(commentSeq);
+	}
+
+	
+	
+	
+	
+	
+}

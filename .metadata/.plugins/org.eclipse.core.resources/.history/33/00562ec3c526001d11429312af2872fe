@@ -1,0 +1,47 @@
+package board;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+@Repository("boardDAO")
+public class BoardDAO {
+
+	
+	@Autowired
+	SqlSession session;
+	
+
+//전체게시판 조회 	
+	public List<BoardDTO> boardlist(){
+		return session.selectList("boardlist");
+	}
+
+//게시물 저장 	
+	public int saveBoard(BoardDTO dto) {
+		int saveResult = session.insert("saveBoard",dto); 
+		return saveResult;
+	}
+
+	
+//Seq 로 게시물 조회
+	public BoardDTO oneBoard(int seq) {
+		return session.selectOne("oneBoard", seq); 
+	}
+	
+//게시물 삭제 
+	
+	public int deleteBoard(int seq) {
+		return session.delete("deleteBoard", seq);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+}

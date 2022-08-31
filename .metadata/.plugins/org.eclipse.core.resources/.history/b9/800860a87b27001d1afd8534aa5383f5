@@ -1,0 +1,51 @@
+package board;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.annotation.Resources;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+@Repository("reviewBoardDAO")
+public class ReviewBoardDAO {
+
+	@Autowired
+	SqlSession session;
+	
+//전체게시판 조회 	
+	public List<ReviewBoardDTO> boardlist(){
+		return session.selectList("boardlist");
+	}
+
+//게시물 저장 	
+	public int saveBoard(ReviewBoardDTO dto) {
+		int saveResult = session.insert("saveBoard",dto); 
+		return saveResult;
+	}
+
+	
+//Seq 로 게시물 조회
+	public ReviewBoardDTO oneBoard(int seq) {
+		return session2.selectOne("oneBoard", seq); 
+	}
+	
+//게시물 삭제 
+	public int deleteBoard(int seq) {
+		return session2.delete("deleteBoard", seq);
+	}
+
+//게시물 수정 	
+	public int editBoard(ReviewBoardDTO dto) {
+		return session2.update("editBoard", dto);
+	}
+	
+	
+	
+	
+	
+	
+	
+}

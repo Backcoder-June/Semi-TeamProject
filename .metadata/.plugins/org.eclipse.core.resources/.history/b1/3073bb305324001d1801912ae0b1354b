@@ -1,0 +1,32 @@
+package board;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class BoardDTO {
+	
+	private int seq; 
+	
+	private String title; 
+	
+	private String contents; 
+	
+	private String writer; 
+	
+	private int secret;
+	
+	private int viewCount; 
+	
+	private String writingTime; 
+
+
+	
+
+
+
+
+
+}
+
+
+
