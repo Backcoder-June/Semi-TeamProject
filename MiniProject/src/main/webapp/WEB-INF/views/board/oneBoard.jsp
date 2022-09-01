@@ -6,14 +6,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>라디오세상</title>
 <link rel="stylesheet" href="${path}/resources/css/comment.css">
 <link rel="stylesheet" href="${path}/resources/css/oneboard.css">
 <link rel="stylesheet" type="text/css" href="resources//css/import.css" />
 <link rel="stylesheet" type="text/css" href="resources//css/common.css" />
 <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="resources/jquery-3.6.0.min.js"></script>
-
 <script>
 
 $(document).ready(function(){			
@@ -77,15 +75,18 @@ $(document).ready(function(){
 </script>
 </head>
 <body>
+	<jsp:include page="/WEB-INF/views/header.jsp" />
 	<div id="secretForm" hidden="true">
-		<h1>비밀글 입니다</h1>
-		암호 : <input type="password" id="pw"><br>
-		<input type="button" value="입력" id="pwBtn">
+		<div class="container">
+			<h1>비밀글 입니다</h1>
+			암호 : <input type="password" id="pw"><br>
+			<input type="button" value="입력" id="pwBtn">
+		</div>
 	</div>
 	<div id="nonSecret" hidden="true">
 		<div class="container">
 		 <div class="inner">
-			<h1>사연게시판</h1>
+			<h1>라디오 사연 게시판</h1>
 				<table class="boardTable" >
 				   	<thead>
 						  <tr>

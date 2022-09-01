@@ -23,7 +23,7 @@ h1{
 	margin-bottom: 20px;
 	text-align: left;
 }
-a.mypage{
+/* a.mypage{
 	position: absolute;
 	top: 20px; right: 40px;
 	display: inline-block;
@@ -37,7 +37,7 @@ a.mypage{
 }
 a.mypage:hover{
 	opacity: 0.8;
-}
+} */
 table{
 	width: 100%;
 	box-sizing: border-box;
@@ -324,6 +324,15 @@ form label{
 	margin: 0 auto 3px auto;
 	font-family: 'PreBold', sans-serif;
 	font-size: 15px;
+}
+
+.signup_wrap, .login_wrap {
+	max-width: 500px;
+	margin: 0 auto;
+}
+
+.signup_wrap h1, .login_wrap h1 {
+	text-align: center;
 }
 .signup_wrap form input{
 	margin-bottom: 20px;

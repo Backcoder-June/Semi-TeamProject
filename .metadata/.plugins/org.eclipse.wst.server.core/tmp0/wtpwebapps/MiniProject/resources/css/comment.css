@@ -6,10 +6,6 @@
 	font: "맑은 고딕";	
 }
 
-body {
-	margin: 10px;
-}
-
 li, ol, ul {
 	list-style: none;
 }

@@ -1,0 +1,57 @@
+package board;
+
+import java.util.HashMap;
+import java.util.List;
+
+public interface BoardService {
+
+	public List<BoardDTO> boardlist();
+
+	public int saveBoard(BoardDTO dto);
+
+	public BoardDTO oneBoard(int seq);
+
+	public int deleteBoard(int seq);
+
+	public int editBoard(BoardDTO dto);
+
+	public List<BoardDTO> limitBoard(int page);
+
+	public int limitPage();
+
+	public boolean secretBoard(int seq);
+
+	public void viewCount(int seq);
+
+	public void likePlus(int seq);
+
+	public void likeMinus(int seq);
+
+//	public int likeCheck(int seq);
+
+	public int likeCheckCancel(int seq);
+
+	public int likeCount(int seq);
+
+	public int checkNum(int seq);
+
+	public List<BoardDTO> searchList(HashMap searchType);
+
+//
+	
+	
+	public void updateLike(int boardseq) throws Exception;
+	
+	public void updateLikeCancel(int boardseq) throws Exception; 
+	
+	public void insertLike(int boardseq,String memberid) throws Exception; 
+	
+	public void deleteLike(int boardseq,String memberid) throws Exception;
+	
+	public int likeCheck(int boardseq,String memberid) throws Exception; 
+
+	public void updateLikeCheck(int boardseq,String memberid) throws Exception;
+
+	public void updateLikeCheckCancel(int boardseq,String memberid) throws Exception;
+	
+}

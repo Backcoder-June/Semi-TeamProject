@@ -144,7 +144,7 @@ $(document).ready(function(){
 	})
 });
 </script>
-<title>Insert title here</title>
+<title>라디오세상</title>
 </head>
 <body>
 	<div class="commentBox">

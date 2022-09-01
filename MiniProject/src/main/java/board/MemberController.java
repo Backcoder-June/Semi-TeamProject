@@ -53,20 +53,12 @@ public class MemberController {
 		return mv;
 	}
 
-	// 로그인 후 페이지 
-	@GetMapping("/loginresult")
-	public String loginedpage() {
-		return "login/loginresult"; 
-	}
-
-	
-	
 	// 로그아웃
 	@RequestMapping("/logout")
 	public String logout(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		session.invalidate();
-		return "login/login";
+		return "login/home";
 	}
 
 //회원가입폼 이동
@@ -107,7 +99,7 @@ public class MemberController {
 		return "login/login";
 	}
 
-//회원정보수정 폼
+//회원정보수정
 	@GetMapping("/memberupdate")
 	public ModelAndView updateBoard(String id, HttpServletRequest request) {
 		HttpSession session = request.getSession();
@@ -121,11 +113,11 @@ public class MemberController {
 
 	}
 
-//회원정보 수정 
+//회원정보 수정 -> ajax로 변경 해보기
 	@PostMapping("/memberupdate")
 	public String updateBoard(MemberDTO dto) {
 		service.updateMember(dto);
-		return "redirect:/";
+		return "redirect:/boardList";
 
 	}
 

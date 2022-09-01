@@ -46,12 +46,27 @@ $(document).ready(function(){
 				alert("본인만 삭제 가능합니다.")
 			}
 		})
-}); //onload
+		// 좋아요
+		$("#like_btn").on("click", function(e) {
+			$.ajax({
+				type : "POST",
+				url : "/miniproject/board/like",
+				dataType : "json",
+				data : {
+					'seq' : $("#likeSeq").val()
+				},
 
+				success : function(resp) {
+					$("#likediv").html(resp.result);
+				}
+			}); // ajax 
+		}); // onclick
+	});
 </script>
 
 </head>
 <body>
+<jsp:include page="/WEB-INF/views/header.jsp" />
 	<div class="container">
 		 <div class="inner">
 			<h1>방청 후기 게시판</h1>
@@ -77,10 +92,6 @@ $(document).ready(function(){
 		</div>
 		
 		<div class="btnContainer">
-			<form>
-				<input type="hidden" id="likeSeq" value="${oneBoard.seq}">
-			</form>
-		
 			<form action="/miniproject/editReviewBoard/${oneBoard.seq}">
 				<input type="hidden" name="editSessionId" value="${oneBoard.writer}">
 				<input type="hidden" name="editBoardId" value="${oneBoard.seq}">

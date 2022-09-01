@@ -14,13 +14,9 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
     <meta name="robots" content="index,follow" />
     <!-- css, javascript -->
-    <script type="text/javascript" src="static/js/jquery-3.1.1.js"></script>
-    <script type="text/javascript" src="static/js/jquery-3.1.1.min.js"></script>
     <link rel="stylesheet" type="text/css" href="resources/css/import.css" />
     <link rel="stylesheet" type="text/css" href="resources/css/common.css" />
-<title>Insert title here</title>
-<script src="http://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="resources/js/jquery-3.6.0.min.js" ></script>
+<title>라디오세상</title>
 <script>
 $(document).ready(function(){
 
@@ -29,10 +25,10 @@ $(document).ready(function(){
 </head>
 <body>
 
-
+	<jsp:include page="/WEB-INF/views/header.jsp" />
 <div id="container">
     <div class="inner">
-        <div class="form_content signup_wrap">
+        <div class="signup_wrap">
             <h1>내 정보</h1>
             <form action="memberupdate" method="post">
                 <label>아이디</label>

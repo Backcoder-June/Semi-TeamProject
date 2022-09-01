@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>라디오세상</title>
     <!-- Meta Tags -->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="expire" content="-1" />
@@ -47,13 +47,10 @@ $(document).ready(function(){
 
 </head>
 <body>
+	<jsp:include page="/WEB-INF/views/header.jsp" />
 <div id="container">
     <div class="inner">
-        <div class="form_content" method="post">
-        
-        <h1>라디오 세상</h1>
-        <hr>
-        <br>
+        <div class="login_wrap" method="post">
             <h1>LOG IN</h1>
             <form action="loginprocess" name="form1" method="post">
                 <fieldset>회원가입 폼</fieldset>

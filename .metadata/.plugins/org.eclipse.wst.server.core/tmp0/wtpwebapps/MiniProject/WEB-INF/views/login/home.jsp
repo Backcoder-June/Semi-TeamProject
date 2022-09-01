@@ -5,9 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
-<script src="http://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="js/jquery-3.6.0.min.js" ></script>
+<title>라디오세상</title>
 <script>
 $(document).ready(function(){
 	
@@ -15,9 +13,7 @@ $(document).ready(function(){
 </script>
 </head>
 <body>
-<h1><a href="boardList">게시판</a></h1>
-<h1><a href="reviewBoardList">후기게시판</a></h1>
-<h1><a href="login">로그인</a></h1>
-
+	<jsp:include page="/WEB-INF/views/header.jsp" />
+	<jsp:include page="/WEB-INF/views/home.jsp" />
 </body>
 </html>

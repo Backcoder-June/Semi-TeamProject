@@ -19,8 +19,7 @@
     <link rel="stylesheet" type="text/css" href="resources/css/import.css" />
     <link rel="stylesheet" type="text/css" href="resources/css/common.css" />
     
-<title>Insert title here</title>
-<script src="http://code.jquery.com/jquery-3.5.1.js"></script>
+<title>라디오세상</title>
 <script src="resources/js/jquery-3.6.0.min.js" ></script>
 <script>
 $(document).ready(function(){
@@ -50,10 +49,10 @@ $("#idcheck").on("click", function(){
 
 </head>
 <body>
-
+	<jsp:include page="/WEB-INF/views/header.jsp" />
 <div id="container">
     <div class="inner">
-        <div class="form_content signup_wrap">
+        <div class="signup_wrap">
             <h1>Sign Up</h1>
             <form action="signin" method="post">
                 <label>아이디</label>
